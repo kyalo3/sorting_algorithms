@@ -41,7 +41,6 @@ void bubble_sort(int *array, size_t size)
 			}
 
 		}
-		/*printf("%d, ", array[i], array[j]);*/
 		/* If no swaps were made in this pass, the array is sorted */
 		if (!swapped)
 		{
