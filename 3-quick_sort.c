@@ -7,8 +7,6 @@ int partition(int *array, int low, int high, size_t size);
 void quicksort(int *array, int low, int high, size_t size);
 bool array_changed(int *arr1, int *arr2, size_t size);
 
-
-
 /**
  * array_changed - chexks whether swap happened
  * @tempArr: original version
@@ -22,7 +20,7 @@ bool array_changed(int *tempArr, int *array, size_t size)
 
 	for (i = 0; i < size; i++)
 	{
-		if (arr1[i] != arr2[i])
+		if (tempArr[i] != array[i])
 			return (true);
 	}
 	return (false);
