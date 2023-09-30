@@ -1,101 +1,105 @@
 #include "sort.h"
 
-/**
- * merge - Merges two sorted sub-arrays into a single sorted array.
- * @array: The integer array containing the merged result.
- * @left: The left sub-array to be merged.
- * @right: The right sub-array to be merged.
- * @leftSize: The size of the left sub-array.
- * @rightSize: The size of the right sub-array.
- *
- * This function takes two sorted sub-arrays
- * (left and right) and merges them
- */
-void merge(int *array, int *left, int *right,
-size_t leftSize, size_t rightSize)
-{
-	size_t i = 0, j = 0, k = 0;
-
-	while (i < leftSize && j < rightSize)
-	{
-		if (left[i] <= right[j])
-			array[k++] = left[i++];
-		else
-			array[k++] = right[j++];
-	}
-
-	while (i < leftSize)
-		array[k++] = left[i++];
-	while (j < rightSize)
-		array[k++] = right[j++];
-}
+void merge(int *array, int *left, int *right, size_t size);
 
 /**
- * merge_sort_helper - Recursively sorts a portion of an integer
- * array using the merge sort algorithm.
- * @array: The integer array to be sorted.
- * @temp: A temporary integer array for merging sub-arrays.
- * @left: The starting index of the portion to be sorted.
- * @right: The ending index of the portion to be sorted.
- *
- * This function sorts a portion of the given array
- * using the merge sort algorithm.
- */
-void merge_sort_helper(int *array, int *temp, size_t left, size_t right)
-{
-	size_t mid, i;
-
-	if (left < right)
-	{
-		mid = left + (right - left) / 2;
-
-		merge_sort_helper(array, temp, left, mid);
-		merge_sort_helper(array, temp, mid + 1, right);
-		merge(temp + left, array + left, array + mid + 1,
-				mid - left + 1, right - mid);
-		for (i = left; i <= right; i++)
-			array[i] = temp[i];
-
-		printf("Merging...\n");
-		printf("[left]: ");
-		for (i = left; i <= mid; i++)
-		{
-			printf("%d", array[i]);
-			if (i < mid)
-				printf(", ");
-		}
-		printf("\n[right]: ");
-		for (i = mid + 1; i <= right; i++)
-		{
-			printf("%d", array[i]);
-			if (i < right)
-				printf(", ");
-		}
-		printf("\n[Done]: ");
-		for (i = left; i <= right; i++)
-		{
-			printf("%d", array[i]);
-			if (i < right)
-				printf(", ");
-		}
-		printf("\n");
-	}
-}
-
-/**
- * merge_sort - Sorts an array of integers in ascending order
+ * merge_sort - a function that sorts an array of integers
+ * in ascending order using the Merge sort algorithm
  * @array: array to be sorted
- * @size: size of the arra to be sorted
+ * @size: size of the array
  */
 void merge_sort(int *array, size_t size)
 {
+	size_t mid = size / 2, i;
+	int *left = array;
+	int *right = array + mid;
+
+	if (size <= 1)
+		return;
+
+	merge_sort(left, mid);
+	merge_sort(right, size - mid);
+
+	printf("Merging...\n");
+	printf("[left]: ");
+	for (i = 0; i < mid; i++)
+	{
+		printf("%d", left[i]);
+		if (i < mid - 1)
+			printf(", ");
+	}
+	printf("\n");
+	printf("[right]: ");
+	for (i = 0; i < size - mid; i++)
+	{
+		printf("%d", right[i]);
+		if (i < size - mid - 1)
+			printf(", ");
+	}
+	printf("\n");
+
+	merge(array, left, right, size);
+}
+
+/**
+ * merge - merges two arrays together
+ * @array: Destination of the merged arrays
+ * @left: array to be merged
+ * @right: array to be merged
+ * @size: size of the final merged array
+ */
+
+void merge(int *array, int *left, int *right, size_t size)
+{
+	size_t left_size = size / 2;
+	size_t right_size = size - left_size;
+	size_t i = 0, j = 0, k = 0, m;
 	int *temp = malloc(size * sizeof(int));
 
 	if (temp == NULL)
 	{
-		fprintf(stderr, "Memory allocation failed.\n");
-		exit(1);
+		return;
 	}
-	merge_sort_helper(array, temp, 0, size - 1);
+
+	while (i < left_size && j < right_size)
+	{
+		if (left[i] <= right[j])
+		{
+			temp[k] = left[i];
+			i++;
+		}
+		else
+		{
+			temp[k] = right[j];
+			j++;
+		}
+		k++;
+	}
+
+	while (i < left_size)
+	{
+		temp[k] = left[i];
+		i++;
+		k++;
+	}
+
+	while (j < right_size)
+	{
+		temp[k] = right[j];
+		j++;
+		k++;
+	}
+
+	for (k = 0; k < size; k++)
+		array[k] = temp[k];
+
+	printf("[Done]: ");
+	for (m = 0; m < size; m++)
+	{
+		printf("%d", array[m]);
+		if (m < size - 1)
+			printf(", ");
+	}
+	printf("\n");
 	free(temp);
 }
